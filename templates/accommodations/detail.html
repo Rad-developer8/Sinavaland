@@ -1,0 +1,460 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ accommodation.name }} - سینوالند{% endblock %}
+
+{% block extra_css %}
+/* ===== Detail Page Header ===== */
+.detail-hero {
+    position: relative;
+    height: 420px;
+    overflow: hidden;
+    margin: 0 -1.5rem 40px;
+}
+
+.detail-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .6s;
+}
+
+.detail-hero:hover img {
+    transform: scale(1.03);
+}
+
+.detail-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(26,39,68,.75) 0%, rgba(26,39,68,.15) 60%, transparent 100%);
+}
+
+.detail-hero-content {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 28px 32px;
+    z-index: 10;
+}
+
+.detail-hero-content h1 {
+    font-size: 2rem;
+    color: var(--primary-fg);
+    margin-bottom: 10px;
+}
+
+@media (min-width: 768px) {
+    .detail-hero-content h1 { font-size: 2.5rem; }
+}
+
+.detail-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.detail-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(250,250,250,.85);
+    font-size: .875rem;
+    font-weight: 500;
+}
+
+.detail-meta-item svg {
+    color: var(--amber);
+    flex-shrink: 0;
+}
+
+/* ===== Hero placeholder (no image) ===== */
+.detail-hero-placeholder {
+    margin: 0 -1.5rem 40px;
+    padding: 80px 0 60px;
+    text-align: center;
+}
+
+.detail-hero-placeholder h1 {
+    font-size: 2rem;
+    color: var(--primary-fg);
+    margin-bottom: 10px;
+}
+
+/* ===== Back Link ===== */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: .875rem;
+    font-weight: 600;
+    color: var(--muted-fg);
+    margin-bottom: 28px;
+    transition: color .2s;
+}
+
+.back-link:hover {
+    color: var(--amber);
+}
+
+/* ===== Layout ===== */
+.detail-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    max-width: 960px;
+    margin: 0 auto 60px;
+}
+
+@media (min-width: 1024px) {
+    .detail-layout {
+        grid-template-columns: 1fr 340px;
+    }
+}
+
+/* ===== Content Sections ===== */
+.detail-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 20px;
+}
+
+.detail-section h3 {
+    font-size: 1.05rem;
+    color: var(--fg);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.detail-section h3 .section-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.detail-section p {
+    color: var(--muted-fg);
+    line-height: 1.9;
+    font-size: .925rem;
+}
+
+/* ===== Sidebar ===== */
+.detail-sidebar {
+    position: sticky;
+    top: 84px;
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.price-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.price-card-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.price-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+}
+
+.price-amount span {
+    font-size: .875rem;
+    font-weight: 400;
+    color: var(--muted-fg);
+}
+
+.price-card-body {
+    padding: 20px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Availability badge */
+.avail-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: .8rem;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+.avail-badge.available {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.avail-badge.unavailable {
+    background: var(--muted);
+    color: var(--muted-fg);
+}
+
+/* Reservation section inside sidebar */
+.reservation-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+}
+
+.reservation-box h4 {
+    font-size: .95rem;
+    color: var(--fg);
+    margin-bottom: 16px;
+}
+
+.btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: .875rem;
+    background: #fee2e2;
+    color: #991b1b;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    justify-content: center;
+    transition: background .2s;
+    text-decoration: none;
+}
+
+.btn-danger:hover {
+    background: #fecaca;
+}
+
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: .875rem;
+    background: transparent;
+    color: var(--navy);
+    border: 1.5px solid var(--navy);
+    cursor: pointer;
+    width: 100%;
+    justify-content: center;
+    transition: background .2s, color .2s;
+    text-decoration: none;
+}
+
+.btn-outline:hover {
+    background: var(--navy);
+    color: var(--primary-fg);
+}
+
+.btn-disabled {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 24px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: .9rem;
+    background: var(--muted);
+    color: var(--steel);
+    border: none;
+    cursor: not-allowed;
+    width: 100%;
+    justify-content: center;
+}
+
+.reserved-notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: .85rem;
+    color: #065f46;
+    background: #d1fae5;
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    margin-bottom: 12px;
+}
+{% endblock %}
+
+{% block content %}
+
+<!-- Back link -->
+<a href="{% url 'accommodations:list' %}" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 18l6-6-6-6"/>
+    </svg>
+    بازگشت به اقامتگاه‌ها
+</a>
+
+<!-- Hero Image / Header -->
+{% if accommodation.image %}
+<div class="detail-hero">
+    <img src="{{ accommodation.image.url }}" alt="{{ accommodation.name }}">
+    <div class="detail-hero-overlay"></div>
+    <div class="detail-hero-content">
+        <h1>{{ accommodation.name }}</h1>
+        <div class="detail-meta-row">
+            <div class="detail-meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                {{ accommodation.location }}
+            </div>
+            <div class="detail-meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
+                </svg>
+                {{ accommodation.get_category_display }}
+            </div>
+            <div class="detail-meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                </svg>
+                {{ accommodation.capacity }} نفر
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="detail-hero-placeholder gradient-industrial" style="margin: 0 -1.5rem 40px; padding: 80px 0 60px; text-align: center;">
+    <div style="position:relative;z-index:10;">
+        <h1 style="font-size:2rem;color:var(--primary-fg);margin-bottom:10px;">{{ accommodation.name }}</h1>
+        <div class="detail-meta-row" style="justify-content:center;">
+            <div class="detail-meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                {{ accommodation.location }}
+            </div>
+            <div class="detail-meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
+                </svg>
+                {{ accommodation.get_category_display }}
+            </div>
+            <div class="detail-meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                </svg>
+                {{ accommodation.capacity }} نفر
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Two-column layout -->
+<div class="detail-layout">
+
+    <!-- Main Content -->
+    <div>
+        <!-- Description -->
+        <div class="detail-section industrial-shadow">
+            <h3>
+                <span class="section-icon gradient-amber">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2d3548" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                </span>
+                توضیحات
+            </h3>
+            <p>{{ accommodation.description }}</p>
+        </div>
+    </div>
+  
+
+    <!-- Sidebar -->
+    <div class="detail-sidebar">
+
+        <!-- Price Card -->
+        <div class="price-card industrial-shadow">
+            <div class="price-card-header">
+                <div class="price-amount">
+                    ${{ accommodation.price_per_night }}
+                    <span>/ شب</span>
+                </div>
+            </div>
+            <div class="price-card-body">
+                {% if accommodation.available %}
+                    <div class="avail-badge available">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>
+                        </svg>
+                        قابل رزرو
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        {% if user_has_reserved %}
+                            <div class="reserved-notice">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>
+                                </svg>
+                                شما این اقامتگاه را رزرو کرده‌اید
+                            </div>
+                            <a href="{% url 'accommodations:cancel_reservation' accommodation.slug %}"
+                               class="btn-danger"
+                               onclick="return confirm('لغو رزرو؟')">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                                </svg>
+                                لغو رزرو
+                            </a>
+                        {% else %}
+                            <form method="post" action="{% url 'accommodations:reserve' accommodation.slug %}"
+                                  onsubmit="return confirm('رزرو این اقامتگاه؟')">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-amber gradient-amber" style="width:100%;justify-content:center;border:none;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>
+                                    </svg>
+                                    رزرو اقامتگاه
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn-outline">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+                            </svg>
+                            برای رزرو وارد شوید
+                        </a>
+                    {% endif %}
+
+                {% else %}
+                    <div class="avail-badge unavailable">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                        </svg>
+                        در حال حاضر در دسترس نیست
+                    </div>
+                    <div class="btn-disabled">رزرو امکان‌پذیر نیست</div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

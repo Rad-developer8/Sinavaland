@@ -1,0 +1,387 @@
+{% extends 'base.html' %}
+
+{% block title %}رزرو اقامتگاه ها - سینوالند{% endblock %}
+
+{% block extra_css %}
+/* ===== Page Header ===== */
+.page-header {
+    position: relative;
+    padding: 80px 0 60px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.page-header-bg {
+    position: absolute;
+    inset: 0;
+}
+
+.page-header-bg .overlay {
+    position: absolute;
+    inset: 0;
+    opacity: .88;
+}
+
+.page-header-content {
+    position: relative;
+    z-index: 10;
+}
+
+.page-header-content h1 {
+    font-size: 2.25rem;
+    color: var(--primary-fg);
+    margin-bottom: 12px;
+}
+
+.page-header-content p {
+    color: rgba(250, 250, 250, .75);
+    font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+    .page-header-content h1 { font-size: 2.75rem; }
+}
+
+/* ===== Filters ===== */
+.filters-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin: 32px 0;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filter-group label {
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--muted-fg);
+    text-transform: uppercase;
+    letter-spacing: .03em;
+}
+
+.filter-group select,
+.filter-group input[type="text"] {
+    padding: 10px 14px;
+    border: 1px solid var(--input);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--fg);
+    font-size: .9rem;
+    transition: border-color .2s;
+    width: 100%;
+}
+
+.filter-group select:focus,
+.filter-group input[type="text"]:focus {
+    outline: none;
+    border-color: var(--amber);
+}
+
+.search-group {
+    flex: 2;
+    min-width: 220px;
+}
+
+.search-row {
+    display: flex;
+    gap: 10px;
+}
+
+.search-row input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid var(--input);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--fg);
+    font-size: .9rem;
+    transition: border-color .2s;
+}
+
+.search-row input:focus {
+    outline: none;
+    border-color: var(--amber);
+}
+
+/* ===== Accommodation Cards Grid ===== */
+.acc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.acc-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: transform .25s, box-shadow .25s;
+    display: flex;
+    flex-direction: column;
+}
+
+.acc-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px -4px rgba(26, 39, 68, .15);
+}
+
+.acc-card-img {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.acc-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .4s;
+}
+
+.acc-card:hover .acc-card-img img {
+    transform: scale(1.05);
+}
+
+.acc-card-img-placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--steel);
+    font-size: .875rem;
+}
+
+.acc-card-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--amber);
+    color: var(--charcoal);
+    font-size: .75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+}
+
+.acc-card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.acc-card-body h3 {
+    font-size: 1.05rem;
+    color: var(--fg);
+    margin-bottom: 6px;
+}
+
+.acc-card-location {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--muted-fg);
+    font-size: .82rem;
+    margin-bottom: 14px;
+}
+
+.acc-card-location svg {
+    flex-shrink: 0;
+    color: var(--amber);
+}
+
+.acc-card-price {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 16px;
+    margin-top: auto;
+}
+
+.acc-card-price span {
+    font-size: .8rem;
+    font-weight: 400;
+    color: var(--muted-fg);
+}
+
+.acc-card-footer {
+    border-top: 1px solid var(--border);
+    padding: 14px 20px;
+}
+
+/* ===== Empty State ===== */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted-fg);
+}
+
+.empty-state svg {
+    margin: 0 auto 16px;
+    opacity: .4;
+}
+
+/* ===== Pagination ===== */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin: 40px 0 60px;
+    flex-wrap: wrap;
+}
+
+.pagination a,
+.pagination span {
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    font-size: .875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .2s, color .2s;
+}
+
+.pagination a {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--fg);
+}
+
+.pagination a:hover {
+    background: var(--muted);
+}
+
+.pagination .current-page {
+    background: var(--navy);
+    color: var(--primary-fg);
+    border: 1px solid var(--navy);
+}
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header" style="margin: 0 -1.5rem;">
+    <div class="page-header-bg">
+        <div class="overlay gradient-industrial"></div>
+    </div>
+    <div class="page-header-content container">
+        <h1>رزرو اقامتگاه ها</h1>
+        <p>اقامتگاه های سینوالند را کشف و رزرو کنید</p>
+    </div>
+</div>
+
+<!-- Filters -->
+<form method="get">
+    <div class="filters-wrap industrial-shadow">
+        <div class="filter-group">
+            <label for="category">دسته‌بندی</label>
+            <select name="category" id="category" onchange="this.form.submit()">
+                <option value="">همه</option>
+                <option value="hotel"      {% if request.GET.category == 'hotel' %}selected{% endif %}>Hotel</option>
+                <option value="villa"      {% if request.GET.category == 'villa' %}selected{% endif %}>Villa</option>
+                <option value="apartment"  {% if request.GET.category == 'apartment' %}selected{% endif %}>Apartment</option>
+                <option value="ecolodge"   {% if request.GET.category == 'ecolodge' %}selected{% endif %}>Ecolodge</option>
+            </select>
+        </div>
+
+        <div class="filter-group search-group">
+            <label for="search">جستجو</label>
+            <div class="search-row">
+                <input type="text" name="search" id="search"
+                       placeholder="نام اقامتگاه یا موقعیت..."
+                       value="{{ request.GET.search }}">
+                <button type="submit" class="btn-amber gradient-amber" style="white-space:nowrap;border:none;">
+                    جستجو
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- Grid -->
+<div class="acc-grid">
+    {% for accommodation in accommodations %}
+    <div class="acc-card animate-fade-in-up industrial-shadow">
+        <div class="acc-card-img">
+            {% if accommodation.image %}
+                <img src="{{ accommodation.image.url }}" alt="{{ accommodation.name }}">
+            {% else %}
+                <div class="acc-card-img-placeholder">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                </div>
+            {% endif %}
+            <div class="acc-card-badge">{{ accommodation.get_category_display }}</div>
+        </div>
+
+        <div class="acc-card-body">
+            <h3>{{ accommodation.name }}</h3>
+            <div class="acc-card-location">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                </svg>
+                {{ accommodation.location }}
+            </div>
+            <div class="acc-card-price">
+                ${{ accommodation.price_per_night }}
+                <span>/ شب</span>
+            </div>
+        </div>
+
+        <div class="acc-card-footer">
+            <a href="{% url 'accommodations:detail' accommodation.slug %}" class="btn-amber gradient-amber" style="width:100%;justify-content:center;">
+                مشاهده جزئیات
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    {% empty %}
+    <div class="empty-state">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <p>اقامتگاهی یافت نشد.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">ابتدا</a>
+        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">قبلی</a>
+    {% endif %}
+
+    <span class="current-page">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">بعدی</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">انتها</a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

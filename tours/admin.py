@@ -1,0 +1,19 @@
+from django.contrib import admin
+from .models import Tour
+
+@admin.register(Tour)
+class TourAdmin(admin.ModelAdmin):
+    list_display = ['title', 'destination','get_reservation_count', 'duration', 'price', 'start_date', 'capacity', 'is_available']
+    list_filter = ['duration', 'is_available', 'start_date']
+    search_fields = ['title','get_reservation_count', 'destination', 'description']
+    prepopulated_fields = {'slug': ('title',)}
+    list_editable = ['is_available']
+    date_hierarchy = 'start_date'
+    filter_horizontal = ['reserved_by']
+
+    def get_reservation_count(self, obj):
+            return obj.reserved_by.count()
+    get_reservation_count.short_description = 'تعداد رزرو'
+
+admin.site.unregister(Tour)  # If already registered
+admin.site.register(Tour, TourAdmin)

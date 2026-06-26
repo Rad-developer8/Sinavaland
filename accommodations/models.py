@@ -1,0 +1,51 @@
+from django.db import models
+from django.utils.text import slugify
+from django.conf import settings
+
+class Accommodation(models.Model):
+    CATEGORY_CHOICES = [
+        ('hotel', 'هتل'),
+        ('villa', 'ویلا'),
+        ('apartment', 'آپارتمان'),
+        ('ecolodge', 'بومگردی'),
+    ]
+    
+    title = models.CharField(max_length=200, verbose_name='عنوان')
+    slug = models.SlugField(unique=True, allow_unicode=True)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, verbose_name='دسته‌بندی')
+    description = models.TextField(verbose_name='توضیحات')
+    location = models.CharField(max_length=200, verbose_name='موقعیت')
+    price_per_night = models.DecimalField(max_digits=10, decimal_places=0, verbose_name='قیمت هر شب')
+    capacity = models.PositiveIntegerField(verbose_name='ظرفیت')
+    image = models.ImageField(upload_to='accommodations/', blank=True, null=True)
+    is_available = models.BooleanField(default=True, verbose_name='موجود')
+    reserved_by = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name='reserved_accommodations',
+        verbose_name='رزرو شده توسط'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = 'اقامتگاه'
+        verbose_name_plural = 'اقامتگاه‌ها'
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return self.title
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title, allow_unicode=True)
+        super().save(*args, **kwargs)
+
+    # ── aliases so templates can use .name and .available ──
+    @property
+    def name(self):
+        return self.title
+
+    @property
+    def available(self):
+        return self.is_available
