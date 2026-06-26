@@ -157,7 +157,7 @@
         .container {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 0 1.5rem
+            padding: 0 1.5rem;
         }
 
         /* ===== Utilities ===== */
@@ -243,7 +243,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 64px
+            height: 64px;
+            padding-inline: 0;
         }
 
         .navbar-brand {
@@ -364,11 +365,18 @@
         .page-wrapper {
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
+        }
+
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
             flex-direction: column
         }
 
         /* ===== Hero ===== */
         .hero {
+            width: 100%;
             position: relative;
             min-height: 85vh;
             display: flex;
@@ -471,6 +479,7 @@
 
         /* ===== Video Section ===== */
         .video-section {
+            width: 100%;
             padding: 80px 0;
             background: var(--card)
         }
@@ -572,6 +581,7 @@
 
         /* ===== Stats ===== */
         .stats {
+            width: 100%;
             padding: 48px 0;
             background: var(--muted);
             border-bottom: 1px solid var(--border)
@@ -613,6 +623,7 @@
 
         /* ===== Image+Text Blocks ===== */
         .img-text-section {
+            width: 100%;
             padding: 80px 0
         }
 
@@ -759,6 +770,7 @@
 
         /* ===== Services Grid ===== */
         .services-section {
+            width: 100%;
             padding: 80px 0;
             background: var(--bg)
         }
@@ -823,6 +835,7 @@
 
         /* ===== Steps ===== */
         .steps-section {
+            width: 100%;
             position: relative;
             padding: 80px 0;
             overflow: hidden
@@ -895,6 +908,7 @@
 
         /* ===== Benefits ===== */
         .benefits-section {
+            width: 100%;
             padding: 80px 0;
             background: var(--bg)
         }
@@ -949,6 +963,7 @@
 
         /* ===== CTA ===== */
         .cta-section {
+            width: 100%;
             position: relative;
             padding: 80px 0;
             overflow: hidden
@@ -1003,6 +1018,7 @@
 
         /* ===== Footer ===== */
         .footer {
+            width: 100%;
             color: var(--primary-fg);
             padding: 48px 0 0
         }

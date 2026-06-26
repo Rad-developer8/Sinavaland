@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}فروشگاه - سیناوالند{% endblock %}
+{% block title %}بازارچه سوغاتی - سیناوالند{% endblock %}
 
 {% block extra_css %}
 /* ===== Page Header ===== */
@@ -9,7 +9,7 @@
     padding: 80px 0 60px;
     overflow: hidden;
     text-align: center;
-    margin: 0 -1.5rem 40px;
+    margin: 0 0 40px;
 }
 
 .page-header-content {
@@ -38,7 +38,7 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 20px 24px;
-    margin-bottom: 32px;
+    margin: 32px 0;
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
@@ -100,19 +100,19 @@
 /* ===== Products Grid ===== */
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 24px;
     margin-bottom: 40px;
 }
 
 .product-card {
     background: var(--card);
-    border: 1px solid var(--border);
     border-radius: var(--radius);
     overflow: hidden;
+    border: 1px solid var(--border);
+    transition: transform .25s, box-shadow .25s;
     display: flex;
     flex-direction: column;
-    transition: transform .25s, box-shadow .25s;
 }
 
 .product-card:hover {
@@ -159,14 +159,14 @@
 }
 
 .product-card-body {
-    padding: 18px 20px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     flex: 1;
 }
 
 .product-card-body h3 {
-    font-size: 1rem;
+    font-size: 1.05rem;
     color: var(--fg);
     margin-bottom: 6px;
 }
@@ -197,7 +197,7 @@
 }
 
 .price-final {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: var(--navy);
 }
@@ -257,7 +257,7 @@
 <!-- Page Header -->
 <div class="page-header gradient-industrial">
     <div class="page-header-content container">
-        <h1>فروشگاه محصولات</h1>
+        <h1>بازارچه سوغاتی</h1>
         <p>محصولات مرتبط با سفر و گردشگری</p>
     </div>
 </div>
@@ -325,7 +325,7 @@
                 <span class="product-stock-label">موجودی: {{ product.stock }}</span>
             </div>
 
-            <a href="{% url 'marketplace:detail' product.slug %}" class="btn-amber gradient-amber" style="width:100%;justify-content:center;">
+            <a href="{% url 'marketplace:detail' product.slug %}" class="btn-amber gradient-amber" style="width:100%;justify-content:center;margin-top:6px;">
                 مشاهده جزئیات
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M15 18l-6-6 6-6"/>
