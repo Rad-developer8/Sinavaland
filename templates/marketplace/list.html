@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}بازارچه سوغاتی - سیناوالند{% endblock %}
+{% block title %}فروشگاه - سیناوالند{% endblock %}
 
 {% block extra_css %}
 /* ===== Page Header ===== */
@@ -9,7 +9,18 @@
     padding: 80px 0 60px;
     overflow: hidden;
     text-align: center;
-    margin: 0 0 40px;
+    margin: 0 -1.5rem 40px;
+}
+
+.page-header-bg {
+    position: absolute;
+    inset: 0;
+}
+
+.page-header-bg .overlay {
+    position: absolute;
+    inset: 0;
+    opacity: .88;
 }
 
 .page-header-content {
@@ -100,7 +111,7 @@
 /* ===== Products Grid ===== */
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 24px;
     margin-bottom: 40px;
 }
@@ -208,14 +219,12 @@
 }
 
 /* ===== Empty State ===== */
-.empty-state {
+.no-results {
     grid-column: 1 / -1;
     text-align: center;
     padding: 60px 20px;
     color: var(--muted-fg);
 }
-
-.empty-state svg { margin: 0 auto 16px; opacity: .4; }
 
 /* ===== Pagination ===== */
 .pagination {
@@ -245,7 +254,7 @@
 
 .pagination a:hover { background: var(--muted); }
 
-.pagination .current-page {
+.pagination .page-current {
     background: var(--navy);
     color: var(--primary-fg);
     border: 1px solid var(--navy);
@@ -255,10 +264,13 @@
 {% block content %}
 
 <!-- Page Header -->
-<div class="page-header gradient-industrial">
+<div class="page-header">
+    <div class="page-header-bg">
+        <div class="overlay gradient-industrial"></div>
+    </div>
     <div class="page-header-content container">
         <h1>بازارچه سوغاتی</h1>
-        <p>محصولات مرتبط با سفر و گردشگری</p>
+        <p>محصولات  مرتبط با سفر و گردشگری</p>
     </div>
 </div>
 
@@ -325,7 +337,7 @@
                 <span class="product-stock-label">موجودی: {{ product.stock }}</span>
             </div>
 
-            <a href="{% url 'marketplace:detail' product.slug %}" class="btn-amber gradient-amber" style="width:100%;justify-content:center;margin-top:6px;">
+            <a href="{% url 'marketplace:detail' product.slug %}" class="btn-amber gradient-amber" style="width:100%;justify-content:center;">
                 مشاهده جزئیات
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M15 18l-6-6 6-6"/>
@@ -335,7 +347,7 @@
     </div>
 
     {% empty %}
-    <div class="empty-state">
+    <div class="no-results">
         <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
@@ -351,7 +363,7 @@
         <a href="?page={{ products.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">قبلی</a>
     {% endif %}
 
-    <span class="current-page">صفحه {{ products.number }} از {{ products.paginator.num_pages }}</span>
+    <span class="page-current">صفحه {{ products.number }} از {{ products.paginator.num_pages }}</span>
 
     {% if products.has_next %}
         <a href="?page={{ products.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">بعدی</a>

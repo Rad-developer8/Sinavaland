@@ -24,3 +24,10 @@ def contact(request):
         return redirect('contact')
     
     return render(request, 'core/contact.html')
+
+
+def host(request):
+    return render(request, 'core/host.html')
+
+def tourist(request):
+    return render(request, 'core/home.html')
